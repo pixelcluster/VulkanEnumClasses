@@ -4,7 +4,14 @@ A generator to generate type-safe C++ "enum class" versions of Vulkan enums.
 - CMake 3.15 or higher  
 - Vulkan SDK 1.2.135 or higher, alternatively a valid vk.xml file
 # Installing
-Prefer using the CMake GUI or IDE integrations over the command line when generating the project for easier access to the generation options. 
+
+### Submodules
+The dependencies folder contains submodules that are needed for generating the source files.  
+To clone the submodules, either clone with `--recursive` or use `git submodule update --init` after cloning.
+
+### Generating
+Prefer using the CMake GUI or IDE integrations over the command line when generating the project for easier access to the generation options.  
+To generate the header file, configure the CMake project and build it.
 
 ### Generated header location
 
