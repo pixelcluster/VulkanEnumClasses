@@ -80,6 +80,7 @@ if(${VKENUMCLASSES_REPLACE_VALUES})
 		list(APPEND GENERATOR_ARGLIST "--value-remove-postfix-core-types")
 	endif()
 endif()
+file(MAKE_DIRECTORY "include")
 add_custom_command(OUTPUT "include/VulkanEnums.hpp" COMMAND generate
 ARGS ${GENERATOR_ARGLIST} WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include"
 DEPENDS generate "$ENV{VULKAN_SDK}/share/vulkan/registry/vk.xml" VERBATIM USES_TERMINAL)
