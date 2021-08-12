@@ -81,7 +81,7 @@ if(${VKENUMCLASSES_REPLACE_VALUES})
 	endif()
 endif()
 file(MAKE_DIRECTORY "include")
-add_custom_target(generate COMMAND BuildGenerator  ${GENERATOR_ARGLIST} 
+add_custom_target(generate ALL COMMAND BuildGenerator  ${GENERATOR_ARGLIST} 
 WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include"
 DEPENDS BuildGenerator "$ENV{VULKAN_SDK}/share/vulkan/registry/vk.xml" VERBATIM USES_TERMINAL)
 
