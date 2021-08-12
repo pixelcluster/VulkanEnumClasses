@@ -31,7 +31,9 @@ In source files using Vulkan enum classes, add
 
 # Generation options
 
-To change the path of the vk.xml file, use the `XMLPATH` option of type `STRING` The path must include "vk.xml".  
+All options listed here are prefixed with `VKENUMCLASSES_` in the CMake file.  
+
+To change the path of the vk.xml file, use the `XMLPATH` option of type `STRING` The path must include the file name.  
 Valid Example: `C:\Users\User\Documents\vk.xml`
 
 There are multiple options to customize the code style of the header.
