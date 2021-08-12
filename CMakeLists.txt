@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.15)
 
 cmake_policy(SET CMP0076 NEW)
 
@@ -80,12 +80,8 @@ if(${REPLACE_VALUES})
 		list(APPEND GENERATOR_ARGLIST "--value-remove-postfix-core-types")
 	endif()
 endif()
-
-string(REPLACE ";" " " GENERATOR_ARGS "${GENERATOR_ARGLIST}")
-
-message("Current arguments: ${GENERATOR_ARGS}")
 add_custom_command(OUTPUT "include/VulkanEnums.hpp" COMMAND generate
-ARGS ${GENERATOR_ARGLIST} WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include" COMMENT "Executing command with args: ${GENERATOR_ARGS}"
+ARGS ${GENERATOR_ARGLIST} WORKING_DIRECTORY "include"
 DEPENDS generate "$ENV{VULKAN_SDK}/share/vulkan/registry/vk.xml" VERBATIM USES_TERMINAL)
 
 add_library(VulkanEnumClasses INTERFACE "include/VulkanEnums.hpp")
@@ -93,4 +89,5 @@ target_include_directories(VulkanEnumClasses INTERFACE "include")
 set_target_properties(VulkanEnumClasses PROPERTIES PUBLIC_HEADER "include/VulkanEnums.hpp")
 
 include(GNUInstallDirs)
-install(TARGETS VulkanEnumClasses PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+install(TARGETS VulkanEnumClasses PUBLIC_HEADER)
+set(tinyxml2_BUILD_TESTING FALSE CACHE BOOL "Toggles building tests for tinyxml." FORCE)
