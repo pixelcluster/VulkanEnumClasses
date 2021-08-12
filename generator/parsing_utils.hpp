@@ -1,4 +1,4 @@
-//VulkanEnumClasses v0.9
+//VulkanEnumClasses v1.0
 //https://github.com/pixelcluster/VulkanEnumClasses
 
 #pragma once

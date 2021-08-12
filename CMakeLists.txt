@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.15)
 
 cmake_policy(SET CMP0076 NEW)
 
-project(VulkanEnumClasses VERSION 0.9 LANGUAGES CXX)
+project(VulkanEnumClasses VERSION 1.0 LANGUAGES CXX)
 
 set(VKENUMCLASSES_XMLPATH "" CACHE STRING "An optional override path to vk.xml. If empty, the vk.xml of the Vulkan SDK will be used.")
 set(VKENUMCLASSES_NAMESPACE "" CACHE STRING "An optional namespace in which all enums will be defined. Empty means no namespace. There must not be any whitespace in the string.")
