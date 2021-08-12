@@ -81,11 +81,11 @@ if(${VKENUMCLASSES_REPLACE_VALUES})
 	endif()
 endif()
 add_custom_command(OUTPUT "include/VulkanEnums.hpp" COMMAND generate
-ARGS ${GENERATOR_ARGLIST} WORKING_DIRECTORY "include"
+ARGS ${GENERATOR_ARGLIST} WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include"
 DEPENDS generate "$ENV{VULKAN_SDK}/share/vulkan/registry/vk.xml" VERBATIM USES_TERMINAL)
 
 add_library(VulkanEnumClasses INTERFACE "include/VulkanEnums.hpp")
-target_include_directories(VulkanEnumClasses INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/include")
+target_include_directories(VulkanEnumClasses INTERFACE "include")
 set_target_properties(VulkanEnumClasses PROPERTIES PUBLIC_HEADER "include/VulkanEnums.hpp")
 
 include(GNUInstallDirs)
