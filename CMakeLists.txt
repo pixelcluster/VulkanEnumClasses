@@ -85,7 +85,7 @@ ARGS ${GENERATOR_ARGLIST} WORKING_DIRECTORY "include"
 DEPENDS generate "$ENV{VULKAN_SDK}/share/vulkan/registry/vk.xml" VERBATIM USES_TERMINAL)
 
 add_library(VulkanEnumClasses INTERFACE "include/VulkanEnums.hpp")
-target_include_directories(VulkanEnumClasses INTERFACE "include")
+target_include_directories(VulkanEnumClasses INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/include")
 set_target_properties(VulkanEnumClasses PROPERTIES PUBLIC_HEADER "include/VulkanEnums.hpp")
 
 include(GNUInstallDirs)
