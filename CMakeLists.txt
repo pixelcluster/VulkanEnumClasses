@@ -26,9 +26,9 @@ set(VKENUMCLASSES_VALUE_REMOVE_POSTFIX TRUE CACHE BOOL "Toggles whether the post
 set(VKENUMCLASSES_VALUE_REMOVE_POSTFIX_NONPOSTFIX_TYPE FALSE CACHE BOOL "Toggles whether the postfixes on extension enum values (e.g. EXT, KHR) of structures that do not have a postfix will be kept or removed.")
 
 add_subdirectory(dependencies/tinyxml EXCLUDE_FROM_ALL)
-add_executable(generate generator/main.cpp generator/generate.hpp generator/generate.cpp generator/parsing_utils.hpp)
-target_link_libraries(generate tinyxml2)
-set_target_properties(generate PROPERTIES OUTPUT_NAME generateHeader)
+add_executable(BuildGenerator generator/main.cpp generator/generate.hpp generator/generate.cpp generator/parsing_utils.hpp)
+target_link_libraries(BuildGenerator tinyxml2)
+set_target_properties(BuildGenerator PROPERTIES OUTPUT_NAME generateHeader)
 
 if(VKENUMCLASSES_XMLPATH STREQUAL "")
 	list(APPEND GENERATOR_ARGLIST "--path" "$ENV{VULKAN_SDK}/share/vulkan/registry/vk.xml")
@@ -81,11 +81,13 @@ if(${VKENUMCLASSES_REPLACE_VALUES})
 	endif()
 endif()
 file(MAKE_DIRECTORY "include")
-add_custom_command(OUTPUT "include/VulkanEnums.hpp" COMMAND generate
-ARGS ${GENERATOR_ARGLIST} WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include"
-DEPENDS generate "$ENV{VULKAN_SDK}/share/vulkan/registry/vk.xml" VERBATIM USES_TERMINAL)
+add_custom_target(generate COMMAND BuildGenerator  ${GENERATOR_ARGLIST} 
+WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include"
+DEPENDS BuildGenerator "$ENV{VULKAN_SDK}/share/vulkan/registry/vk.xml" VERBATIM USES_TERMINAL)
 
-add_library(VulkanEnumClasses INTERFACE "include/VulkanEnums.hpp")
+add_library(VulkanEnumClasses INTERFACE)
+add_dependencies(VulkanEnumClasses generate)
+target_sources(VulkanEnumClasses INTERFACE "include/VulkanEnums.hpp")
 target_include_directories(VulkanEnumClasses INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/include")
 set_target_properties(VulkanEnumClasses PROPERTIES PUBLIC_HEADER "include/VulkanEnums.hpp")
 
