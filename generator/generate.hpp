@@ -45,13 +45,17 @@ struct VulkanEnumValue
 	bool isBitpos = false;
 };
 
+enum class VulkanEnumType {
+	Enum, Bitmask, Bitmask64
+};
+
 class VulkanEnum
 {
 public:
 	std::string name;
 	std::string originalName;
 	bool isIncluded = false;
-	bool isBitmask = false;
+	VulkanEnumType type;
 
 	//Enum value definitions are sometimes duplicated across vk.xml, this makes sure the same value name won't occur twice
 	void addEnumValue(std::string originalValueName, VulkanEnumValue value) {

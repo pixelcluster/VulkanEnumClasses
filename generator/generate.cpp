@@ -116,6 +116,9 @@ void writeEnums(const EnumMap& enumMap, std::ostream& outStream, const ParsingOp
 {
 	addLine(outStream, "#ifndef __VULKANENUMS_HPP");
 	addLine(outStream, "#define __VULKANENUMS_HPP");
+
+
+	addLine(outStream, "#include <cstdint>");
 	//namespace opener
 	if (options.useNamespaces) {
 		addLine(outStream, "namespace " + options.namespaceName + " {");
@@ -125,7 +128,20 @@ void writeEnums(const EnumMap& enumMap, std::ostream& outStream, const ParsingOp
 	for (const auto& enumPair : enumMap) {
 		const VulkanEnum& enumValue = enumPair.second;
 		if (enumValue.isIncluded) {
-			std::string baseType = enumValue.isBitmask ? " : unsigned int" : "";
+
+			std::string baseType;
+			switch (enumValue.type) {
+			case VulkanEnumType::Enum:
+				baseType = "";
+				break;
+			case VulkanEnumType::Bitmask:
+				baseType = " : uint32_t";
+				break;
+			case VulkanEnumType::Bitmask64:
+				baseType = " : uint64_t";
+				break;
+			}
+
 			addLine(outStream, "enum class " + enumValue.name + baseType + " {");
 			++indentationLevel;
 
@@ -146,15 +162,23 @@ void writeEnums(const EnumMap& enumMap, std::ostream& outStream, const ParsingOp
 			addLine(outStream, "};");
 
 			//Add logical operations for bitmask types
-			if (enumValue.isBitmask) {
+			if (enumValue.type != VulkanEnumType::Enum) {
+				bool is64Bit = enumValue.type == VulkanEnumType::Bitmask64;
+
 				addLine(outStream, "");
-				addEnumOperator(outStream, enumValue.name, "|");
-				addEnumOperator(outStream, enumValue.name, "&");
-				addEnumOperator(outStream, enumValue.name, "^");
+				addEnumOperator(outStream, enumValue.name, "|", is64Bit);
+				addEnumOperator(outStream, enumValue.name, "&", is64Bit);
+				addEnumOperator(outStream, enumValue.name, "^", is64Bit);
+
 				//NOT (~) operator
 				addLine(outStream, "inline " + enumValue.name + " operator~(" + enumValue.name + " obj) {");
 				++indentationLevel;
-				addLine(outStream, "return static_cast<" + enumValue.name + ">(~static_cast<unsigned int>(obj));");
+
+				if(is64Bit)
+					addLine(outStream, "return static_cast<" + enumValue.name + ">(~static_cast<uint64_t>(obj));");
+				else
+					addLine(outStream, "return static_cast<" + enumValue.name + ">(~static_cast<uint32_t>(obj));");
+
 				--indentationLevel;
 				addLine(outStream, "}");
 			}
@@ -197,7 +221,13 @@ VulkanEnum parseBasicEnumNode(const XMLElement* node, const ParsingOptions& opti
 
 	const char* type = node->Attribute("type");
 	if (type && !strcmp(type, "bitmask")) {
-		result.isBitmask = true;
+		const char* bitwidth = node->Attribute("bitwidth");
+		if (bitwidth && !strcmp(bitwidth, "64")) {
+			result.type = VulkanEnumType::Bitmask64;
+		}
+		else {
+			result.type = VulkanEnumType::Bitmask;
+		}
 	}
 
 	const XMLElement* valueNode = node->FirstChildElement("enum");

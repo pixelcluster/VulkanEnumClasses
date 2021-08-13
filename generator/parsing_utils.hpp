@@ -29,11 +29,17 @@ inline void addLine(std::ostream& stream, const std::string& string) {
 	stream << string << "\n";
 }
 
-inline void addEnumOperator(std::ostream& cppFile, const std::string& enumName, const std::string& operatorName) {
+inline void addEnumOperator(std::ostream& cppFile, const std::string& enumName, const std::string& operatorName, bool is64Bit) {
 	addLine(cppFile, "inline " + enumName + " operator" + operatorName + "(" + enumName + " one, " + enumName + " other) { ");
 	++indentationLevel;
-	addLine(cppFile, "return static_cast<" + enumName + ">(static_cast<unsigned int>(one) " + operatorName);
-	addLine(cppFile, "static_cast<unsigned int>(other));");
+	if (is64Bit) {
+		addLine(cppFile, "return static_cast<" + enumName + ">(static_cast<uint64_t>(one) " + operatorName);
+		addLine(cppFile, "static_cast<uint64_t>(other));");
+	}
+	else {
+		addLine(cppFile, "return static_cast<" + enumName + ">(static_cast<uint32_t>(one) " + operatorName);
+		addLine(cppFile, "static_cast<uint32_t>(other));");
+	}
 	--indentationLevel;
 	addLine(cppFile, "}");
 }
