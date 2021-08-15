@@ -194,16 +194,24 @@ void writeEnums(const EnumMap& enumMap, std::ostream& outStream, const ParsingOp
 
 void writeEnumValue(const VulkanEnumValue& enumValue, std::ostream& outStream, bool isLastValue)
 {
+	//Explicitly filter out aliases with the same name, avoiding redefinitions
+	if(enumValue.name == enumValue.value) return;
+
 	if (!enumValue.comment.empty()) {
 		addLine(outStream, "//" + enumValue.comment);
 	}
 
 	std::string valueText;
 	if (enumValue.isBitpos) {
-		valueText = "1 << " + enumValue.value;
+		valueText = "1ULL << " + enumValue.value;
 	}
 	else {
 		valueText = enumValue.value;
+
+		//Add explicit unsignedness to negative values
+		if(valueText.find('-') != std::string::npos) {
+			valueText.push_back('U');
+		}
 	}
 	addLine(outStream, enumValue.name + " = " + valueText + (isLastValue ? "" : ", "));
 }
@@ -297,7 +305,7 @@ void parseValueNode(const XMLElement* valueNode, VulkanEnum& vulkanEnum, const P
 	if (offsetC && extNumberC) {
 		int offset = atoi(offsetC);
 		int extNumber = atoi(extNumberC);
-		enumValue.value = std::to_string(1000000000 + extNumber * 100 + offset);
+		enumValue.value = std::to_string(1000000000 + (extNumber - 1) * 1000 + offset);
 	}
 	else if (aliasC) {
 		enumValue.value = aliasC;
