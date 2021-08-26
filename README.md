@@ -19,10 +19,11 @@ When generation is complete, the generated header file can be found in `include/
 
 # Integration in other CMake projects
 VulkanEnumClasses can be integrated in other CMake projects using the `add_subdirectory` command:  
-```
+```cmake
 add_subdirectory(VulkanEnumClasses)
+[...]
+target_link_libraries(<target name> VulkanEnumClasses)
 ```
-Specifying `target_link_libraries` is not needed since the library is header-only.
 
 In source files using Vulkan enum classes, add
 ```cpp

@@ -87,7 +87,6 @@ DEPENDS BuildGenerator "$ENV{VULKAN_SDK}/share/vulkan/registry/vk.xml" VERBATIM 
 
 add_library(VulkanEnumClasses INTERFACE)
 add_dependencies(VulkanEnumClasses generate)
-target_sources(VulkanEnumClasses INTERFACE "include/VulkanEnums.hpp")
 target_include_directories(VulkanEnumClasses INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/include")
 set_target_properties(VulkanEnumClasses PROPERTIES PUBLIC_HEADER "include/VulkanEnums.hpp")
 
