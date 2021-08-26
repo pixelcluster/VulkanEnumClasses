@@ -287,7 +287,12 @@ void parseValueNode(const XMLElement* valueNode, VulkanEnum& vulkanEnum, const P
 
 void processName(const ParsingOptions& options, std::string& name)
 {
-	if (name.find_first_of("Vk") == 0) {
+	//Change FlagBits to Flags since the actual bitmask is integrated into being an enum here
+	size_t flagBitsIndex = name.find("FlagBits");
+	if (flagBitsIndex != std::string::npos)
+		name.replace(flagBitsIndex, 8, "Flags");
+
+	if (name.find("Vk") == 0) {
 		name.replace(0, 2, options.namePrefixReplacement);
 	}
 	if (options.nameRemovePostfix) {
