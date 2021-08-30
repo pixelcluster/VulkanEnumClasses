@@ -132,8 +132,6 @@ void writeEnums(const EnumMap& enumMap, std::ostream& outStream, const ParsingOp
 			std::string baseType;
 			switch (enumValue.type) {
 			case VulkanEnumType::Enum:
-				baseType = "";
-				break;
 			case VulkanEnumType::Bitmask:
 				baseType = " : uint32_t";
 				break;
