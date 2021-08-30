@@ -117,8 +117,11 @@ void writeEnums(const EnumMap& enumMap, std::ostream& outStream, const ParsingOp
 	addLine(outStream, "#ifndef __VULKANENUMS_HPP");
 	addLine(outStream, "#define __VULKANENUMS_HPP");
 
-
 	addLine(outStream, "#include <cstdint>");
+
+	addLine(outStream, "#ifdef _MSC_VER");
+	addLine(outStream, "#pragma warning( disable : 4146 )"); //Disable sign on unsigned value warnings (triggered on "-1U")
+	addLine(outStream, "#endif");
 	//namespace opener
 	if (options.useNamespaces) {
 		addLine(outStream, "namespace " + options.namespaceName + " {");
