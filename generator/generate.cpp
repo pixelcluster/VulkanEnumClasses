@@ -344,7 +344,14 @@ void processValueName(const ParsingOptions& options, std::string& valueName, con
 	size_t prefixLength = valueName.find("VK_") == 0 ? 3 : 0;
 
 	if (options.removeStructureNames) {
-		std::string structureName = structureNameToEnumValue(originalStructureName); //The original unprocessed name is needed
+		//The original unprocessed name is needed
+		std::string structureName = structureNameToEnumValue(originalStructureName);
+		// The extension tag will be removed separately in the value, 
+		// but it might interfere with values that start with the same letter as an extension tag
+		// (e.g. Error and EXT)
+		removeTags(options.extensionTagNames, structureName);
+		//Add trailing underscore to remove the underscore connecting enum type and value
+		structureName.push_back('_');
 		//Remove all characters matching the structure name
 		for (size_t i = 0; i < valueName.length(); ++i) {
 			if (valueName[i] == structureName[i]) {

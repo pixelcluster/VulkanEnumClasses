@@ -91,12 +91,10 @@ inline std::string structureNameToEnumValue(const std::string& name) {
 			newName.push_back(toupper(name[i]));
 		}
 	}
-	//Remove the "FlagBits" member of 
-	size_t flagBitOffset = newName.find("FLAG_BITS");
+	//Remove the "FlagBits" member of bitflags
+	size_t flagBitOffset = newName.find("_FLAG_BITS");
 	if (flagBitOffset != std::string::npos) {
 		newName.replace(flagBitOffset, 10, "");
 	}
-
-	newName.push_back('_'); //In Vulkan enums, the value following the structure name is separated by another _
 	return newName;
 }
