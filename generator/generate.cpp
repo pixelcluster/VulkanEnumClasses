@@ -292,6 +292,7 @@ void parseValueNode(const XMLElement* valueNode, VulkanEnum& vulkanEnum, const P
 	const char* offsetC = valueNode->Attribute("offset");
 	const char* extNumberC = grandparent ? grandparent->ToElement()->Attribute("number") : nullptr;
 	const char* commentC = valueNode->Attribute("comment");
+	const char* dirC = valueNode->Attribute("dir");
 
 	if (commentC) {
 		enumValue.comment = commentC;
@@ -319,6 +320,10 @@ void parseValueNode(const XMLElement* valueNode, VulkanEnum& vulkanEnum, const P
 	}
 	else if (valueC) {
 		enumValue.value = valueC;
+	}
+
+	if (dirC && dirC[0] == '-') {
+		enumValue.value.insert(enumValue.value.begin(), '-');
 	}
 	vulkanEnum.addEnumValue(valueName, enumValue);
 
