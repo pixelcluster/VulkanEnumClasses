@@ -135,6 +135,8 @@ void writeEnums(const EnumMap& enumMap, std::ostream& outStream, const ParsingOp
 			std::string baseType;
 			switch (enumValue.type) {
 			case VulkanEnumType::Enum:
+				baseType = " : int32_t";
+				break;
 			case VulkanEnumType::Bitmask:
 				baseType = " : uint32_t";
 				break;
@@ -208,11 +210,6 @@ void writeEnumValue(const VulkanEnumValue& enumValue, std::ostream& outStream, b
 	}
 	else {
 		valueText = enumValue.value;
-
-		//Add explicit unsignedness to negative values
-		if(valueText.find('-') != std::string::npos) {
-			valueText.push_back('U');
-		}
 	}
 	addLine(outStream, enumValue.name + " = " + valueText + (isLastValue ? "" : ", "));
 }
